@@ -16,6 +16,8 @@ The variables that can be passed to this role and a brief description about them
 ```
 ope_dns_servers: 192.168.1.3
 ope_search_domain: openshift.int.example.com
+ope_ntpserver: ntp.ubuntu.com
+ope_timezone: Europe/Helsinki
 ```
 
 Dependencies

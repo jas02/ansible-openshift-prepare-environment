@@ -1,0 +1,23 @@
+---
+- name: set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: set temporary DNS server
+  set_fact:
+    ope_dns_servers: 8.8.8.8
+    
+- name: initially configure NetworkManager
+  template:
+    src: nm.conf.j2
+    dest: /etc/NetworkManager/conf.d/nm.conf
+    owner: root
+    group: root
+    mode: 0644
+    
+- name: immediately restart NetworkManager
+  meta: flush_handlers
+  
+- name: set timezone
+  timezone:
+    name: {{ ope_timezone }}
