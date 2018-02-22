@@ -20,4 +20,4 @@
   
 - name: set timezone
   timezone:
-    name: {{ ope_timezone }}
+    name: "{{ ope_timezone }}"
