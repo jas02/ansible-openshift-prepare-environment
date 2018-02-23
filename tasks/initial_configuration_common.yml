@@ -14,6 +14,7 @@
     owner: root
     group: root
     mode: 0644
+  notify: restart NetworkManager
     
 - name: immediately restart NetworkManager
   meta: flush_handlers
