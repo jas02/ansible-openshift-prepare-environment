@@ -26,4 +26,4 @@
   with_items:
     - cns-deploy
     - heketi-client
-  when: inventory_hostname in {{ groups['glusterfs*'] }}
+  when: inventory_hostname in {{ groups['glusterfs'] }} or in {{ groups['glusterfs_registry'] }}
