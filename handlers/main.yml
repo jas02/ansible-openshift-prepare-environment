@@ -6,5 +6,5 @@
 
 - name: restart ntp
   service:
-      name: ntp
+      name: ntpd
       state: restarted
