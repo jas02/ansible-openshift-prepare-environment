@@ -5,3 +5,5 @@
   when: ansible_distribution == "RedHat"
 
 - import_tasks: setup_ntp_server.yml
+
+- import_tasks: configure_ssh_access.yml

@@ -1,0 +1,31 @@
+---
+- name: create /root/.ssh directory
+  file:
+    path: /root/.ssh
+    state: directory
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: generate ssh keys on all nodes
+  shell: ssh-keygen -b 2048 -t rsa -f /root/.ssh/id_rsa -q -N ""
+  args:
+    creates: /root/.ssh/id_rsa
+
+- name: fetch all servers id_rsa.pub file content 
+  shell: cat ~/.ssh/id_rsa.pub
+  register: ssh_keys
+
+- name: disable host key checking
+  lineinfile:
+    dest: /etc/ssh/ssh_config
+    line: "StrictHostKeyChecking no"
+
+- name: make sure all ssh keys are in authorized_keys
+  authorized_key:
+    user: root
+    key: "{{ item[0] }}"
+  delegate_to: "{{ item[1] }}"
+  with_nested:
+        - "{{ ssh_keys.stdout }}"
+        - "{{groups['openshift']}}"
