@@ -28,7 +28,7 @@
   command: subscription-manager attach
   when: sm_output.stdout | search("Status.*Unknown")
 
-- name: enable ose rhel channel
+- name: enable required rhel channels
   shell: |
     subscription-manager unsubscribe --all &&
     subscription-manager attach --pool={{ ope_rhel_subscription_pool_id }} &&
@@ -39,3 +39,8 @@
         --enable='rhel-7-fast-datapath-rpms' \
         --enable='rhel-7-server-optional-rpms'
   when: sm_output.stdout | search("Status.*Unknown")
+
+- name: enable glusterfs rhel channel
+  shell: |
+    subscription-manager repos --enable=rh-gluster-3-for-rhel-7-server-rpms
+  when: inventory_hostname in {{ groups['glusterfs'] }} or in {{ groups['glusterfs_registry'] }}
