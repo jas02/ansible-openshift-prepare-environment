@@ -3,3 +3,6 @@ ope_dns_servers: 192.168.1.53
 ope_search_domain: openshift.int.example.com
 ope_ntpserver: ntp.ubuntu.com
 ope_timezone: Europe/Helsinki
+ope_rhel_subscription_name: rhelsubname
+ope_rhel_subscription_password: rhelsubpass
+ope_rhel_subscription_pool_id: dfgv9swerw0908ert9r
