@@ -3,3 +3,8 @@
   service:
     name: NetworkManager
     state: restarted
+
+- name: restart ntp
+  service:
+      name: ntp
+      state: restarted

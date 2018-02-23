@@ -1,0 +1,20 @@
+---
+- name: install ntp server
+  yum:
+    name: ntp
+    state: present
+
+- name: configure ntp server
+  template:
+    src: ntp.conf.j2
+    dest: /etc/ntp.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart ntp
+
+- name: start and enable ntp server
+  service:
+    name: ntp
+    state: started
+    enabled: yes
