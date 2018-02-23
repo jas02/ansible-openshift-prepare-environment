@@ -1,0 +1,29 @@
+---
+- name: install required base packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - wget
+    - git
+    - net-tools
+    - bind-utils
+    - iptables-services
+    - bridge-utils
+    - bash-completion
+    - kexec-tools
+    - sos
+    - psacct
+    - lvm2
+    - NetworkManager
+    - ntpdate
+    - ntp
+
+- name: install required packages for glusterfs
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - cns-deploy
+    - heketi-client
+  when: inventory_hostname in {{ groups['glusterfs*'] }}
