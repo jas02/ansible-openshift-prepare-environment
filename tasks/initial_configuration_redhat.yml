@@ -40,7 +40,10 @@
         --enable='rhel-7-server-optional-rpms'
   when: sm_output.stdout | search("Status.*Unknown")
 
-- name: enable glusterfs rhel channel
+- name: enable glusterfs rhel channel and install required packages
   shell: |
-    subscription-manager repos --enable=rh-gluster-3-for-rhel-7-server-rpms
+    subscription-manager attach --pool={{ ope_glusterfs_subscription_pool_id }} &&
+    subscription-manager repos --enable=rh-gluster-3-for-rhel-7-server-rpms &&
+    yum install cns-deploy heketi-client -y &&
+    subscription-manager repos --disable=rh-gluster-3-for-rhel-7-server-rpms
   when: inventory_hostname in {{ groups['glusterfs'] }} or {{ groups['glusterfs_registry'] }}

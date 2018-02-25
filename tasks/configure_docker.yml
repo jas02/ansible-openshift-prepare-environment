@@ -1,0 +1,51 @@
+- name: make sure docker is installed
+  package:
+    name: docker
+    state: present
+
+- name: check the volume group state
+  stat:
+    path: "/dev/mapper/docker--vg-docker--pool"
+  register: dev_docker_pool
+
+- name: make sure docker is not running
+  service:
+    name: docker
+    state: stopped
+  when: dev_docker_pool.stat.islnk is not defined
+  
+- name: restart container-storage-support
+  command: container-storage-setup --reset
+  when: dev_docker_pool.stat.islnk is not defined
+
+- name: remove /var/lib/docker
+  file:
+    path: /var/lib/docker
+    state: absent
+  when: dev_docker_pool.stat.islnk is not defined
+
+- name: configure docker storage
+  copy:
+    content: |
+      STORAGE_DRIVER=overlay2
+      DEVS={{ ope_docker_volume_dev }}
+      CONTAINER_THINPOOL=docker-pool
+      CONTAINER_ROOT_LV_NAME=docker-pool
+      CONTAINER_ROOT_LV_SIZE=100%FREE
+      CONTAINER_ROOT_LV_MOUNT_PATH=/var/lib/docker
+      VG=docker-vg
+      WIPE_SIGNATURES=true
+    dest: /etc/sysconfig/docker-storage-setup
+  when: dev_docker_pool.stat.islnk is not defined
+
+- name: run docker-storage-setup
+  command: /bin/docker-storage-setup
+  args:
+    creates: /dev/mapper/docker-vg-docker-pool
+  when: dev_docker_pool.stat.islnk is not defined
+
+- name: start docker
+  systemd:
+    name: docker
+    state: started
+    enabled: yes

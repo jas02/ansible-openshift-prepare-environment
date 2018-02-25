@@ -1,0 +1,9 @@
+---
+- name: configure NetworkManager
+  template:
+    src: nm.conf.j2
+    dest: /etc/NetworkManager/conf.d/nm.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart NetworkManager

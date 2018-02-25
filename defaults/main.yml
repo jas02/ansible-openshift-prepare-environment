@@ -6,3 +6,5 @@ ope_timezone: Europe/Helsinki
 ope_rhel_subscription_name: rhelsubname
 ope_rhel_subscription_password: rhelsubpass
 ope_rhel_subscription_pool_id: dfgv9swerw0908ert9r
+ope_glusterfs_subscription_pool_id: 8a85f98a597f13a001598d08667a172f
+ope_docker_volume_dev: /dev/vdc
