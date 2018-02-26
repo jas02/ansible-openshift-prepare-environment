@@ -18,3 +18,4 @@
     - NetworkManager
     - ntpdate
     - ntp
+    - glusterfs-fuse
