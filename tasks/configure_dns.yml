@@ -1,4 +1,8 @@
 ---
+- name: set openshift DNS server
+  set_fact:
+    ope_dns_servers: "{{ hostvars['ns1']['ansible_default_ipv4']['address'] }}"
+
 - name: configure NetworkManager
   template:
     src: nm.conf.j2
