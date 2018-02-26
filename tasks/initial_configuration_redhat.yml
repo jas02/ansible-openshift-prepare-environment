@@ -46,4 +46,4 @@
     subscription-manager repos --enable=rh-gluster-3-for-rhel-7-server-rpms &&
     yum install cns-deploy heketi-client -y &&
     subscription-manager repos --disable=rh-gluster-3-for-rhel-7-server-rpms
-  when: inventory_hostname in {{ groups['glusterfs'] }} or {{ groups['glusterfs_registry'] }}
+  when: inventory_hostname in groups['glusterfs'] or groups['glusterfs_registry']
