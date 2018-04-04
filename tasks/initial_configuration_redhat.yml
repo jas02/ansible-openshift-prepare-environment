@@ -16,12 +16,9 @@
   command: subscription-manager list
   register: sm_output
 
-- name: enable rhel and ocp channels
-  rhn_register:
-    state: present
-    username: "{{ ope_rhel_subscription_name }}"
-    password: "{{ ope_rhel_subscription_password }}"
-    channels: "{{ ope_ocp_rhel_channels }}" 
+- name: register system to rhn
+  command: subscription-manager register --username={{ ope_rhel_subscription_name }} --password={{ ope_rhel_subscription_password }}
+  when: sm_output.stdout | search("Status.*Unknown")
 
 - name: auto-attach system to rhn
   command: subscription-manager auto-attach
@@ -31,10 +28,35 @@
   command: subscription-manager attach
   when: sm_output.stdout | search("Status.*Unknown")
 
-#- name: enable glusterfs rhel channel and install required packages
-#  shell: |
-#    subscription-manager attach --pool={{ ope_glusterfs_subscription_pool_id }} &&
-#    subscription-manager repos --enable=rh-gluster-3-for-rhel-7-server-rpms &&
-#    yum install cns-deploy heketi-client -y &&
-#    subscription-manager repos --disable=rh-gluster-3-for-rhel-7-server-rpms
-#  when: inventory_hostname in groups['glusterfs'] or groups['glusterfs_registry']
+- name: enable required rhel channels
+  shell: |
+    subscription-manager unsubscribe --all &&
+    subscription-manager attach --pool={{ ope_rhel_subscription_pool_id }} &&
+    subscription-manager repos --disable='*' &&
+    subscription-manager repos --enable='rhel-7-server-rpms' \
+        --enable='rhel-7-server-extras-rpms' \
+        --enable='rhel-7-server-ose-3.7-rpms' \
+        --enable='rhel-7-fast-datapath-rpms' \
+        --enable='rhel-7-server-optional-rpms'
+  when: sm_output.stdout | search("Status.*Unknown")
+
+- name: enable glusterfs rhel channel
+  shell: |
+    subscription-manager attach --pool={{ ope_glusterfs_subscription_pool_id }} &&
+    subscription-manager repos --enable=rh-gluster-3-for-rhel-7-server-rpms
+  when: inventory_hostname in groups['glusterfs'] or groups['glusterfs_registry']
+
+- name: install cns-deploy and hetekti packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "cns-deploy"
+    - "heketi-client"
+  when: inventory_hostname in groups['glusterfs'] or groups['glusterfs_registry']
+
+- name: disable glusterfs rhel channel
+  shell: |
+    subscription-manager repos --disable=rh-gluster-3-for-rhel-7-server-rpms
+  when: inventory_hostname in groups['glusterfs'] or groups['glusterfs_registry']
+
