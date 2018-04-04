@@ -1,5 +1,5 @@
 ---
-ope_dns_servers: 192.168.1.53
+ope_dns_servers: "192.168.1.53,8.8.8.8"
 ope_search_domain: openshift.int.example.com
 ope_ntpserver: ntp.ubuntu.com
 ope_timezone: Europe/Helsinki
@@ -8,3 +8,4 @@ ope_rhel_subscription_password: rhelsubpass
 ope_rhel_subscription_pool_id: dfgv9swerw0908ert9r
 ope_glusterfs_subscription_pool_id: 8a85f98a597f13a001598d08667a172f
 ope_docker_volume_dev: /dev/vdc
+ope_ocp_rhel_channels: "rhel-7-fast-datapath-rpms,rhel-7-server-extras-rpms,rhel-7-server-optional-rpms,rhel-7-server-ose-3.7-rpms,rhel-7-server-rh-common-rpms,rhel-7-server-rpms"
