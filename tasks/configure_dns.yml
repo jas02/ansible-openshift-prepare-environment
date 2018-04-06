@@ -1,7 +1,11 @@
 ---
 - name: set openshift DNS server
   set_fact:
-    ope_dns_servers: "{{ hostvars[openshift_nameserver_hostname]['ansible_default_ipv4']['address'] }}"
+    ope_dns_servers: "{{ hostvars[openshift_nameserver_hostname]['ansible_default_ipv4']['address'] }},131.207.233.71"
+
+- name: debug dns server
+  debug:
+    msg: "DNS server {{ ope_dns_servers }}"
 
 - name: configure NetworkManager
   template:
