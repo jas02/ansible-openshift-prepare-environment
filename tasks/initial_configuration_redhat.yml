@@ -52,23 +52,23 @@
     name: ansible
     state: present
 
-#- name: enable glusterfs rhel channel
-#  shell: |
-#    subscription-manager attach --pool={{ ope_glusterfs_subscription_pool_id }} &&
-#    subscription-manager repos --enable=rh-gluster-3-for-rhel-7-server-rpms
-#  when: inventory_hostname in groups['glusterfs'] or groups['glusterfs_registry']
-#
-#- name: install cns-deploy and hetekti packages
-#  yum:
-#    name: "{{ item }}"
-#    state: present
-#  with_items:
-#    - "cns-deploy"
-#    - "heketi-client"
-#  when: inventory_hostname in groups['glusterfs'] or groups['glusterfs_registry']
-#
-#- name: disable glusterfs rhel channel
-#  shell: |
-#    subscription-manager repos --disable=rh-gluster-3-for-rhel-7-server-rpms
-#  when: inventory_hostname in groups['glusterfs'] or groups['glusterfs_registry']
-#
+- name: enable glusterfs rhel channel
+  shell: |
+    subscription-manager attach --pool={{ ope_glusterfs_subscription_pool_id }} &&
+    subscription-manager repos --enable=rh-gluster-3-for-rhel-7-server-rpms
+  when: inventory_hostname in groups['glusterfs'] or groups['glusterfs_registry']
+
+- name: install cns-deploy and hetekti packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "cns-deploy"
+    - "heketi-client"
+  when: inventory_hostname in groups['glusterfs'] or groups['glusterfs_registry']
+
+- name: disable glusterfs rhel channel
+  shell: |
+    subscription-manager repos --disable=rh-gluster-3-for-rhel-7-server-rpms
+  when: inventory_hostname in groups['glusterfs'] or groups['glusterfs_registry']
+
