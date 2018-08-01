@@ -1,1 +1,17 @@
 ---
+
+- name: test task from code anywhere
+  copy:
+    src: /test/src.txt
+    dest: /tmp/test.txt
+    owner: root
+    group: root
+    mode: 0644
+
+- name: second test task
+  git:
+    repo: "https://github.com/jas02/ansible-openshift-prepare-environment.git"
+    dest: /srv/dest
+    version: 1.0
+    
+ 
