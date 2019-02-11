@@ -28,7 +28,7 @@
   copy:
     content: |
       STORAGE_DRIVER=overlay2
-      DEVS={{ ope_docker_volume_dev }}
+      DEVS={{ openshift_docker_volume_dev }}
       CONTAINER_THINPOOL=docker-pool
       CONTAINER_ROOT_LV_NAME=docker-pool
       CONTAINER_ROOT_LV_SIZE=100%FREE
