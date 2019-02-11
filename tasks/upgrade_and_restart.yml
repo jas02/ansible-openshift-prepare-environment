@@ -21,5 +21,6 @@
     port: "{{ ansible_ssh_port }}"
     delay: 15
     search_regex: OpenSSH
-  connection: local
+  vars:
+    ansible_connection: local
   when: need_restart.stdout.find('Reboot is required') != -1
