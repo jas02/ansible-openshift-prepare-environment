@@ -8,6 +8,7 @@
     - git
     - net-tools
     - bind-utils
+    - yum-utils
     - iptables-services
     - bridge-utils
     - bash-completion
@@ -15,7 +16,4 @@
     - sos
     - psacct
     - lvm2
-    - NetworkManager
     - ntpdate
-    - ntp
-    - glusterfs-fuse

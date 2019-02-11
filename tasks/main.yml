@@ -6,10 +6,6 @@
 
 - import_tasks: setup_ntp_server.yml
 
-- import_tasks: configure_ssh_access.yml
-
 - import_tasks: install_base_packages.yml
 
 - import_tasks: configure_docker.yml
-
-- import_tasks: configure_dns.yml

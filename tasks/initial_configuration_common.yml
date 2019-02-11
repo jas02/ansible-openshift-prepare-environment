@@ -1,13 +1,19 @@
 ---
-- name: set hostname
+- name: set server hostname
   hostname:
     name: "{{ inventory_hostname }}"
 
-- name: set temporary DNS server
+- name: make sure NetworkManager is installed
+  yum:
+    name: NetworkManager
+    state: present
+
+- name: set openshift dns servers variable
   set_fact:
-    ope_dns_servers: 8.8.8.8
-    
-- name: initially configure NetworkManager
+    openshift_dns_servers: "{{ hostvars[item]['ansible_default_ipv4']['address'] }}"
+  with_items: "{{ groups.dns }}"
+
+- name: configure NetworkManager
   template:
     src: nm.conf.j2
     dest: /etc/NetworkManager/conf.d/nm.conf
@@ -21,4 +27,4 @@
   
 - name: set timezone
   timezone:
-    name: "{{ ope_timezone }}"
+    name: "{{ openshift_timezone }}"

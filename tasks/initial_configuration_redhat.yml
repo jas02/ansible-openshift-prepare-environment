@@ -10,14 +10,14 @@
     state: present
 
 - name: initial sync of time
-  shell: ntpdate -u {{ ope_ntpserver }}
+  shell: ntpdate -u {{ openshift_ntpserver }}
 
 - name: list rhn registration
   command: subscription-manager list
   register: sm_output
 
 - name: register system to rhn
-  command: subscription-manager register --username={{ ope_rhel_subscription_name }} --password={{ ope_rhel_subscription_password }}
+  command: subscription-manager register --username={{ openshift_rhel_subscription_name }} --password={{ openshift_rhel_subscription_password }}
   when: sm_output.stdout | search("Status.*Unknown")
 
 - name: auto-attach system to rhn
@@ -31,44 +31,28 @@
 - name: enable required rhel channels
   shell: |
     subscription-manager unsubscribe --all &&
-    subscription-manager attach --pool={{ ope_rhel_subscription_pool_id }} &&
+    subscription-manager attach --pool={{ openshift_rhel_subscription_pool_id }} &&
     subscription-manager repos --disable='*' &&
     yum-config-manager --disable \* &&
     subscription-manager repos \ 
         --enable="rhel-7-server-rpms" \
         --enable="rhel-7-server-extras-rpms" \
-        --enable="rhel-7-server-ose-3.9-rpms" \
-        --enable="rhel-7-fast-datapath-rpms" \
-        --enable="rhel-7-server-ansible-2.4-rpms"
+        --enable="rhel-7-server-ose-3.11-rpms" \
+        --enable="rh-gluster-3-client-for-rhel-7-server-rpms" \
+        --enable="rhel-7-server-ansible-2.6-rpms"
   when: sm_output.stdout | search("Status.*Unknown")
 
-- name: install atomic-openshift-utils
+- name: install heketi package
   yum:
-    name: atomic-openshift-utils
+    name: heketi-client
     state: present
 
-- name: install rhel-7-ansible
-  yum:
-    name: ansible
-    state: present
-
-- name: enable glusterfs rhel channel
-  shell: |
-    subscription-manager attach --pool={{ ope_glusterfs_subscription_pool_id }} &&
-    subscription-manager repos --enable=rh-gluster-3-for-rhel-7-server-rpms
-  when: inventory_hostname in groups['glusterfs'] or groups['glusterfs_registry']
-
-- name: install cns-deploy and hetekti packages
+- name: install glusterfs packages
   yum:
     name: "{{ item }}"
     state: present
   with_items:
-    - "cns-deploy"
-    - "heketi-client"
-  when: inventory_hostname in groups['glusterfs'] or groups['glusterfs_registry']
-
-- name: disable glusterfs rhel channel
-  shell: |
-    subscription-manager repos --disable=rh-gluster-3-for-rhel-7-server-rpms
-  when: inventory_hostname in groups['glusterfs'] or groups['glusterfs_registry']
-
+    - "glusterfs"
+    - "glusterfs-client-xlators"
+    - "glusterfs-libs"
+    - "glusterfs-fuse"
