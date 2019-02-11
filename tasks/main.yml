@@ -1,11 +1,15 @@
 ---
 - import_tasks: initial_configuration_common.yml
+  when: inventory_hostname not in groups['dns']
 
 - import_tasks: initial_configuration_redhat.yml
-  when: ansible_distribution == "RedHat"
+  when: ansible_distribution == "RedHat" and inventory_hostname not in groups['dns']
 
 - import_tasks: setup_ntp_server.yml
+  when: inventory_hostname not in groups['dns']
 
 - import_tasks: install_base_packages.yml
+  when: inventory_hostname not in groups['dns']
 
 - import_tasks: configure_docker.yml
+  when: inventory_hostname not in groups['dns']
