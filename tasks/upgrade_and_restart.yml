@@ -4,18 +4,22 @@
     name: "*"
     state: latest
 
-- name: reboot the server
+- name: check if reboot is necessary
+  shell: "needs-restarting  -r ; echo $?"
+  register: need_restart
+
+- name: reboot the server if necessary
   command: shutdown -r now
-  sudo: yes
   async: 0
   poll: 0
   ignore_errors: true
+  when: need_restart.stdout.find('Reboot is required') != -1
 
 - name: waiting for server to restart
-  local_action:
-    module:
-      wait_for:
-        host: "{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}"
-        port: "{{ ansible_ssh_port }}"
-        delay: 15
-        search_regex: OpenSSH
+  wait_for:
+    host: "{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}"
+    port: "{{ ansible_ssh_port }}"
+    delay: 15
+    search_regex: OpenSSH
+  connection: local
+  when: need_restart.stdout.find('Reboot is required') != -1
