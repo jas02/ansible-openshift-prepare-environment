@@ -17,3 +17,4 @@
     - psacct
     - lvm2
     - ntpdate
+    - skopeo
