@@ -9,3 +9,4 @@ openshift_rhel_subscription_pool_id: dfgv9swerw0908ert9r
 openshift_glusterfs_subscription_pool_id: 8a85f98a597f13a001598d08667a172f
 openshift_docker_volume_dev: /dev/vdc
 openshift_ocp_rhel_channels: "rhel-7-fast-datapath-rpms,rhel-7-server-extras-rpms,rhel-7-server-optional-rpms,rhel-7-server-ose-3.11-rpms,rhel-7-server-rh-common-rpms,rhel-7-server-rpms"
+openshift_install_gluster: true

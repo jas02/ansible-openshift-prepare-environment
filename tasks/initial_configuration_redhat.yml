@@ -39,17 +39,18 @@
     subscription-manager repos --disable='*' &&
     yum-config-manager --disable \* &&
     subscription-manager repos \ 
-        --enable="rhel-7-server-rpms" \
-        --enable="rhel-7-server-extras-rpms" \
-        --enable="rhel-7-server-ose-3.11-rpms" \
-        --enable="rh-gluster-3-client-for-rhel-7-server-rpms" \
-        --enable="rhel-7-server-ansible-2.6-rpms"
+        --enable="{{ openshift_rhel7_server_rpms_package }}" \
+        --enable="{{ openshift_rhel7_server_extras_rpms_package }}" \
+        --enable="{{ openshift_rhel7_server_ose_rpms_package }}" \
+        #--enable="rh-gluster-3-client-for-rhel-7-server-rpms" \
+        --enable="{{ openshift_rhel7_server_ansible_rpms_package }}"
   when: sm_output.stdout | search("Status.*Unknown")
 
 - name: install heketi package
   yum:
     name: heketi-client
     state: present
+  when: openshift_install_gluster
 
 - name: install glusterfs packages
   yum:
@@ -60,3 +61,4 @@
     - "glusterfs-client-xlators"
     - "glusterfs-libs"
     - "glusterfs-fuse"
+  when: openshift_install_gluster
