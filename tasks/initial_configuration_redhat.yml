@@ -12,6 +12,9 @@
 - name: initial sync of time
   shell: ntpdate -u {{ openshift_ntpserver }}
 
+- name: unregister from rhn or satellite
+  command: subscription-manager unregister
+
 - name: list rhn registration
   command: subscription-manager list
   register: sm_output
